@@ -1,0 +1,24 @@
+{
+  "name": "google-stock-price-analysis",
+  "version": "1.0.0",
+  "description": "Final Year AIML Engineering Capstone • Quantitative Finance AI, Stochastic Monte Carlo Price Cones (GBM), 14-Day RSI Backtesting & Power BI Suite",
+  "main": "src/stock_ml_engine.js",
+  "scripts": {
+    "test": "node tests/stock_analytics.test.js",
+    "start": "npx serve dashboard",
+    "build": "node src/stock_ml_engine.js"
+  },
+  "keywords": [
+    "machine-learning",
+    "power-bi",
+    "quantitative-finance",
+    "monte-carlo-simulation",
+    "geometric-brownian-motion",
+    "rsi-strategy",
+    "aiml-capstone",
+    "final-year-engineering"
+  ],
+  "author": "Mithun Gowda M <Final Year B.E. / B.Tech in Artificial Intelligence & Machine Learning (AIML)>",
+  "license": "MIT",
+  "homepage": "https://github.com/Mithun-gowda-M/google-stock-price-analysis"
+}

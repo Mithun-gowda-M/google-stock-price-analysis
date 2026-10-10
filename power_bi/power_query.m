@@ -1,3 +1,12 @@
+/* ====================================================================
+   ACADEMIC CAPSTONE SUBMISSION • FINAL YEAR ENGINEERING IN AIML
+   Project: Google Stock Price Analysis & Quant AI Engine
+   Author: Mithun Gowda M (Final Year B.E. / B.Tech AIML)
+   Department: Department of Computer Science & Engineering (AIML)
+   File: Power Query M ETL Script Suite
+   Repository: https://github.com/Mithun-gowda-M/google-stock-price-analysis
+   ==================================================================== */
+
 // ====================================================================
 // POWER QUERY (M) - GOOGLE STOCK PRICE ETL
 // ====================================================================

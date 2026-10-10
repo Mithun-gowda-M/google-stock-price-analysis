@@ -1,7 +1,8 @@
 /**
- * Automated Test Suite - Google Stock Price Analytics
+ * Automated Test Suite - Google Stock Price Analysis & Quant AI Engine
+ * Academic Capstone Submission • Final Year Engineering in AIML
+ * Student: Mithun Gowda M (B.E. / B.Tech AIML)
  */
-
 const assert = require('assert');
 const path = require('path');
 const { processStockData, computeSMA } = require('../src/stock_analytics');
