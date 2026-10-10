@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google (Alphabet Inc.) Stock Price & Quant Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="brand">
+        <div class="logo-icon">📈</div>
+        <div>
+          <div class="ticker-title">
+            <h1>Alphabet Inc. (GOOGL / GOOG)</h1>
+            <span class="ticker-badge">NASDAQ • S&P 500</span>
+          </div>
+          <p class="subtitle">Historical Price Dynamics, Volatility Spreads, Technical Moving Averages & Index Benchmarks (2004–2023)</p>
+        </div>
+      </div>
+      <div class="header-metrics">
+        <div class="metric-block">
+          <span class="m-label">Latest Close</span>
+          <span class="m-value" id="hdrClose">$134.06</span>
+          <span class="m-sub positive" id="hdrReturn">+5,264.3% All-Time</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- KPI Metric Cards Grid -->
+    <section class="kpi-grid">
+      <div class="kpi-card accent-blue">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-details">
+          <span class="kpi-label">IPO Initial Price (2004)</span>
+          <span class="kpi-value" id="kpiInitial">$2.50</span>
+          <span class="kpi-badge neutral">Split-Adjusted</span>
+        </div>
+      </div>
+      <div class="kpi-card accent-emerald">
+        <div class="kpi-icon">🚀</div>
+        <div class="kpi-details">
+          <span class="kpi-label">All-Time High (ATH)</span>
+          <span class="kpi-value" id="kpiAth">$152.10</span>
+          <span class="kpi-badge positive">Peak Valuation</span>
+        </div>
+      </div>
+      <div class="kpi-card accent-amber">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Avg Daily Volatility Spread</span>
+          <span class="kpi-value" id="kpiVol">2.18%</span>
+          <span class="kpi-badge neutral">(High - Low) / Low</span>
+        </div>
+      </div>
+      <div class="kpi-card accent-purple">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Avg Daily Volume</span>
+          <span class="kpi-value" id="kpiVolQty">119.2M</span>
+          <span class="kpi-badge neutral">Shares / Day</span>
+        </div>
+      </div>
+      <div class="kpi-card accent-cyan">
+        <div class="kpi-icon">📅</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Trading Sessions</span>
+          <span class="kpi-value" id="kpiSessions">4,842</span>
+          <span class="kpi-badge neutral">19.2 Years</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Visuals Grid -->
+    <main class="dashboard-grid">
+      <!-- Price Trends & Moving Averages -->
+      <div class="card visual-span-2">
+        <div class="card-header">
+          <h2>Price Trends & Technical Moving Averages (SMA 20, 50, 200)</h2>
+          <div class="chart-toggles">
+            <label><input type="checkbox" id="toggleSma20" checked> SMA 20</label>
+            <label><input type="checkbox" id="toggleSma50" checked> SMA 50</label>
+            <label><input type="checkbox" id="toggleSma200" checked> SMA 200</label>
+          </div>
+        </div>
+        <div class="chart-container large">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Comparative Performance vs Market Indices -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Comparative Cumulative Return</h2>
+          <span class="card-tag">Alpha Generation</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="benchmarkChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Trading Volume Activity -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Trading Volume Activity & 30D Moving Average</h2>
+          <span class="card-tag">Liquidity</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="volumeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Daily Volatility Spread Distribution -->
+      <div class="card visual-span-2">
+        <div class="card-header">
+          <h2>Intraday Volatility Spread Timeline (High - Low %)</h2>
+          <span class="card-tag">Risk & Volatility Regime</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="volatilityChart"></canvas>
+        </div>
+      </div>
+    </main>
+
+    <!-- Recent Trading Sessions Table -->
+    <section class="card">
+      <div class="card-header">
+        <h2>Latest Trading Sessions (OHLC & Intraday Spread)</h2>
+        <span class="card-tag">Terminal Sessions</span>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table" id="sessionsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Open ($)</th>
+              <th>High ($)</th>
+              <th>Low ($)</th>
+              <th>Close ($)</th>
+              <th>Volume</th>
+              <th>Intraday Spread %</th>
+              <th>Daily Change %</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <p>Power BI Mini Project 3 • Google Stock Price Analysis • OHLC Trends • Volatility Modeling • Index Benchmarking</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+/* ====================================================================
+   POWER BI DAX MEASURES SUITE - GOOGLE STOCK PRICE ANALYSIS
+   ==================================================================== */
+
+// --- 1. CORE PRICE MEASURES ---
+
+Latest Close = 
+LASTNONBLANKVALUE('Date_Dim'[Date], AVERAGE('Google_Stock'[Adj Close]))
+
+IPO Base Price = 
+CALCULATE(
+    FIRSTNONBLANKVALUE('Date_Dim'[Date], AVERAGE('Google_Stock'[Adj Close])),
+    ALL('Date_Dim')
+)
+
+Cumulative Return % = 
+VAR Base = [IPO Base Price]
+VAR CurrentPrice = [Latest Close]
+RETURN
+    DIVIDE(CurrentPrice - Base, Base, 0) * 100
+
+All Time High (ATH) = 
+CALCULATE(
+    MAX('Google_Stock'[High]),
+    ALL('Date_Dim')
+)
+
+All Time Low (ATL) = 
+CALCULATE(
+    MIN('Google_Stock'[Low]),
+    ALL('Date_Dim')
+)
+
+
+// --- 2. TECHNICAL MOVING AVERAGES (SMA 20, 50, 200) ---
+
+SMA 20 Close = 
+CALCULATE(
+    AVERAGE('Google_Stock'[Adj Close]),
+    DATESINPERIOD('Date_Dim'[Date], LASTDATE('Date_Dim'[Date]), -20, DAY)
+)
+
+SMA 50 Close = 
+CALCULATE(
+    AVERAGE('Google_Stock'[Adj Close]),
+    DATESINPERIOD('Date_Dim'[Date], LASTDATE('Date_Dim'[Date]), -50, DAY)
+)
+
+SMA 200 Close = 
+CALCULATE(
+    AVERAGE('Google_Stock'[Adj Close]),
+    DATESINPERIOD('Date_Dim'[Date], LASTDATE('Date_Dim'[Date]), -200, DAY)
+)
+
+
+// --- 3. VOLATILITY & RISK ANALYSIS ---
+
+Intraday High-Low Spread = 
+AVERAGE('Google_Stock'[High]) - AVERAGE('Google_Stock'[Low])
+
+Intraday Volatility % = 
+DIVIDE([Intraday High-Low Spread], AVERAGE('Google_Stock'[Low]), 0) * 100
+
+Rolling 30D Price StDev = 
+CALCULATE(
+    STDEV.P('Google_Stock'[Adj Close]),
+    DATESINPERIOD('Date_Dim'[Date], LASTDATE('Date_Dim'[Date]), -30, DAY)
+)
+
+
+// --- 4. VOLUME LIQUIDITY METRICS ---
+
+Average Trading Volume = 
+AVERAGE('Google_Stock'[Volume])
+
+Volume 30D Moving Average = 
+CALCULATE(
+    AVERAGE('Google_Stock'[Volume]),
+    DATESINPERIOD('Date_Dim'[Date], LASTDATE('Date_Dim'[Date]), -30, DAY)
+)
+
+Volume Spike Alert = 
+IF([Average Trading Volume] > (2 * [Volume 30D Moving Average]), "High Liquidity Spike", "Normal")
+
+
+// --- 5. GOLDEN CROSS BREAKOUT SIGNAL ---
+
+Golden Cross Signal = 
+VAR S50 = [SMA 50 Close]
+VAR S200 = [SMA 200 Close]
+RETURN
+    IF(
+        NOT(ISBLANK(S50)) && NOT(ISBLANK(S200)) && S50 > S200,
+        "Bullish Trend (Golden Cross Regime)",
+        "Bearish / Neutral (Death Cross Regime)"
+    )
