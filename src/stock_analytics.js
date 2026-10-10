@@ -145,6 +145,14 @@ function processStockData(csvPath) {
     sampled.push(last);
   }
 
+  // AIML Integration: RSI 14, Bollinger Bands, Monte Carlo & Strategy Backtest
+  const { computeRSI, computeBollingerBands, monteCarloSimulation, backtestStrategy } = require('./stock_ml_engine');
+  const closes = clean.map(c => c.adjClose);
+  const rsiSeries = computeRSI(closes, 14);
+  const bollinger = computeBollingerBands(closes, sma20, 20);
+  const backtest = backtestStrategy(clean, rsiSeries);
+  const monteCarlo = monteCarloSimulation(last.adjClose, 0.28, 30, 300);
+
   return {
     kpis: {
       totalTradingSessions: processed.length,
@@ -157,6 +165,13 @@ function processStockData(csvPath) {
       totalReturnPct: totalReturn,
       avgDailySpreadPct,
       avgDailyVolume: Math.round(totalVolume / processed.length)
+    },
+    aiIntelligence: {
+      backtest,
+      monteCarloProjection: monteCarlo,
+      latestRSI: rsiSeries[rsiSeries.length - 1],
+      latestBollingerUpper: bollinger.upper[bollinger.upper.length - 1],
+      latestBollingerLower: bollinger.lower[bollinger.lower.length - 1]
     },
     timeseriesSample: sampled,
     benchmarksSample: benchmarks.filter((_, idx) => idx % step === 0),

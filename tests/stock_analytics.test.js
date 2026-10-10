@@ -45,4 +45,24 @@ result.benchmarksSample.forEach(b => {
 });
 console.log('✓ Test 5 Passed: S&P 500 and NASDAQ-100 comparative series synchronized');
 
-console.log('\nAll Google Stock Analytics tests passed successfully! (5/5)');
+// Test 6: AIML 14-Day RSI Technical Bounds
+const rsi = result.aiIntelligence.latestRSI;
+assert(rsi >= 0 && rsi <= 100, `RSI must be bounded in [0, 100], got ${rsi}`);
+console.log(`✓ Test 6 Passed: AIML 14-day RSI momentum oscillator verified (${rsi.toFixed(2)})`);
+
+// Test 7: AIML Bollinger Bands Spread
+const upper = result.aiIntelligence.latestBollingerUpper;
+const lower = result.aiIntelligence.latestBollingerLower;
+assert(upper > lower, `Bollinger upper band ($${upper}) must exceed lower band ($${lower})`);
+console.log(`✓ Test 7 Passed: AIML +-2 sigma Bollinger bands boundary verified ([$${lower}, $${upper}])`);
+
+// Test 8: AIML Monte Carlo Stochastic Projections
+const mc = result.aiIntelligence.monteCarloProjection;
+assert.strictEqual(mc.length, 31, 'Monte Carlo must project 30 days plus baseline (31 steps)');
+mc.forEach(m => {
+  assert(m.p95 >= m.median, `Bullish cone ($${m.p95}) must be >= median ($${m.median})`);
+  assert(m.median >= m.p5, `Median ($${m.median}) must be >= bearish cone ($${m.p5})`);
+});
+console.log('✓ Test 8 Passed: AIML 300-path Geometric Brownian Motion Monte Carlo cone validated');
+
+console.log('\nAll Google Stock Analytics tests passed successfully! (8/8)');

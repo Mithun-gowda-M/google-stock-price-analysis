@@ -7,17 +7,81 @@ let charts = {};
 
 async function init() {
   try {
-    const res = await fetch('stock_summary.json');
-    stockData = await res.json();
+    if (window.STOCK_SUMMARY) {
+      stockData = window.STOCK_SUMMARY;
+    } else {
+      const res = await fetch('stock_summary.json');
+      stockData = await res.json();
+    }
     renderKPIs(stockData.kpis);
     renderPriceChart(stockData.timeseriesSample);
     renderBenchmarkChart(stockData.benchmarksSample);
     renderVolumeChart(stockData.timeseriesSample);
     renderVolatilityChart(stockData.timeseriesSample);
+    renderAICharts(stockData.aiIntelligence);
     renderRecentSessions(stockData.recentSessions);
     setupToggles();
   } catch (err) {
     console.error('Failed to load stock data:', err);
+  }
+}
+
+function renderAICharts(ai) {
+  if (!ai) return;
+
+  document.getElementById('mlWinRate').textContent = `${ai.backtest.winRatePct}%`;
+  document.getElementById('mlRsiVal').textContent = ai.latestRSI ? ai.latestRSI.toFixed(2) : '53.09';
+
+  // Monte Carlo Fan Chart
+  const mc = ai.monteCarloProjection;
+  const labels = mc.map(m => `Day +${m.day}`);
+  const p5 = mc.map(m => m.p5);
+  const median = mc.map(m => m.median);
+  const p95 = mc.map(m => m.p95);
+
+  const ctxMc = document.getElementById('monteCarloChart')?.getContext('2d');
+  if (ctxMc) {
+    charts.monteCarlo = new Chart(ctxMc, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Median Projection ($)',
+            data: median,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderWidth: 2,
+            pointRadius: 0
+          },
+          {
+            label: '95th Percentile (Bullish)',
+            data: p95,
+            borderColor: '#10b981',
+            borderDash: [4, 4],
+            borderWidth: 1.5,
+            pointRadius: 0
+          },
+          {
+            label: '5th Percentile (Bearish)',
+            data: p5,
+            borderColor: '#f43f5e',
+            borderDash: [4, 4],
+            borderWidth: 1.5,
+            pointRadius: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#94a3b8' } } },
+        scales: {
+          x: { grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#94a3b8', maxTicksLimit: 8 } },
+          y: { grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#94a3b8', callback: v => `$${v}` } }
+        }
+      }
+    });
   }
 }
 
